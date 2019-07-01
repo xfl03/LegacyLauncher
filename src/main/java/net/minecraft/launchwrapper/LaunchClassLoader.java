@@ -135,7 +135,7 @@ public class LaunchClassLoader extends URLClassLoader {
 
             CodeSigner[] signers = null;
 
-            if (lastDot > -1 && !untransformedName.startsWith("net.minecraft.")) {
+            if (lastDot > -1 && !untransformedName.startsWith("net.minecraft.") && !untransformedName.startsWith("com.mojang.blaze3d.")) {
                 if (urlConnection instanceof JarURLConnection) {
                     final JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
                     final JarFile jarFile = jarURLConnection.getJarFile();
