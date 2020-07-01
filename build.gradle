@@ -6,9 +6,15 @@ repositories {
     mavenCentral()
 }
 
-group = 'optifine'
-archivesBaseName = 'launchwrapper-of'
-version = '2.1'
+String getBuildNum() {
+    if (System.getenv("CIRCLE_BUILD_NUM") != null)
+        return System.getenv("CIRCLE_BUILD_NUM")
+    return "00"
+}
+
+group = 'customskinloader'
+archivesBaseName = 'launchwrapper'
+version = '2.1.' + getBuildNum()
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -31,10 +37,18 @@ jar {
     manifest {
         attributes(
             'Implementation-Version' : version,
-            'Implementation-Vendor' : "OptiFine",
             'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
             'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
             'Created-By'     : "Gradle ${gradle.gradleVersion}"
         )
+    }
+}
+
+apply from: rootProject.file('cos.gradle')
+
+task upload {
+    onlyIf { System.getenv("COS_SECRET_KEY") != null }
+    doLast {
+        uploadArtifacts(version)
     }
 }
