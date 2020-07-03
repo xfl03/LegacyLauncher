@@ -13,6 +13,8 @@ buildscript {
     }
 }
 
+import java.security.MessageDigest
+
 import com.qcloud.cos.COSClient
 import com.qcloud.cos.ClientConfig
 import com.qcloud.cos.auth.BasicCOSCredentials
@@ -63,7 +65,11 @@ void uploadArtifacts(String shortVersion) {
         if (key == null) continue
         uploadFile(key, file)
         String url = cosUrl + key
-        println(String.format("lw-%s\t%s", shortVersion, url))
+        MessageDigest digest = MessageDigest.getInstance("SHA1")
+        digest.update(file.getBytes())
+        String sha1 = new BigInteger(1, digest.digest()).toString(16).padLeft(40, "0")
+        String size = file.size().toString()
+        println(String.format("lw-%s\t%s\n\t\t(sha1: %s, size: %s)", shortVersion, url, sha1, size))
     }
 }
 

@@ -32,4 +32,16 @@ public class ClassLoaderUtils {
         }
         return urls;
     }
+
+    // From https://github.com/MinecraftForge/Installer/blob/fe18a164b5ebb15b5f8f33f6a149cc224f446dc2/src/main/java/net/minecraftforge/installer/actions/PostProcessors.java#L287-L303
+    public static ClassLoader getParentClassLoader() {
+        if (!System.getProperty("java.version").startsWith("1.")) {
+            try {
+                return (ClassLoader) ClassLoader.class.getDeclaredMethod("getPlatformClassLoader").invoke(null);
+            } catch (Throwable t) {
+                LogWrapper.warning("No platform classloader: " + System.getProperty("java.version"));
+            }
+        }
+        return null;
+    }
 }

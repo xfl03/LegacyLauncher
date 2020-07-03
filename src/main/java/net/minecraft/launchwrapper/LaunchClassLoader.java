@@ -44,12 +44,13 @@ public class LaunchClassLoader extends URLClassLoader {
     private static File tempFolder = null;
 
     public LaunchClassLoader(URL[] sources) {
-        super(sources, null);
+        super(sources, ClassLoaderUtils.getParentClassLoader());
         this.sources = new ArrayList<URL>(Arrays.asList(sources));
 
         // classloader exclusions
         addClassLoaderExclusion("java.");
-        addClassLoaderExclusion("sun."); addClassLoaderExclusion("com.sun.");
+        addClassLoaderExclusion("sun.");
+        addClassLoaderExclusion("com.sun.");
         addClassLoaderExclusion("org.lwjgl.");
         addClassLoaderExclusion("org.apache.logging.");
         addClassLoaderExclusion("net.minecraft.launchwrapper.");
@@ -60,7 +61,6 @@ public class LaunchClassLoader extends URLClassLoader {
         addTransformerExclusion("org.objectweb.asm.");
         addTransformerExclusion("com.google.common.");
         addTransformerExclusion("org.bouncycastle.");
-        addTransformerExclusion("net.minecraft.launchwrapper.injector.");
 
         if (DEBUG_SAVE) {
             int x = 1;
